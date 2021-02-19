@@ -119,6 +119,10 @@
           }
         }
       }
-    }},
-  "defaultProject": "microservicios"
+    }
+  },
+  "defaultProject": "microservicios",
+  "cli": {
+    "analytics": false
+  }
 }

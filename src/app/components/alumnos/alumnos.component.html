@@ -1,0 +1,35 @@
+<div class="card bg-light mb-3">
+    <div class="card-header">{{titulo}}</div>
+    <div class="card-body">
+
+        <button class="btn btn-primary my-2" routerLink="/alumnos/form">crear</button>
+
+        <div class="alert alert-info" *ngIf="alumnos?.length==0">
+            No hay datos en la tabla
+        </div>
+        <table class="table table-hover table-striped" *ngIf="alumnos?.length>0">
+            <thead>
+                <tr>
+                    <th>id</th>
+                    <th>nombre</th>
+                    <th>apellido</th>
+                    <th>email</th>
+                    <th>creado en</th>
+                    <th>Editar</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let alumno of alumnos">
+                    <th>{{alumno.id}}</th>
+                    <th>{{alumno.nombre}}</th>
+                    <th>{{alumno.apellido}}</th>
+                    <th>{{alumno.email}}</th>
+                    <th>{{alumno.createAt | date:'yyyy-MM-dd'}}</th>
+                    <th><button class="btn btn-primary btn-sm" [routerLink]="['/alumnos/form',alumno.id]">Editar</button></th>
+                    <th><button class="btn btn-danger btn-sm" (click)="eliminar(alumno)">Eliminar</button></th>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+</div>
