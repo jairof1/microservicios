@@ -2,42 +2,39 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { BASE_ENDPOINT } from '../config/app';
 import { Alumno } from '../models/alumno';
+import { CommonService } from './common.service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class AlumnoService {
-  private baseEndPoint='http://localhost:8090/api/alumnos'
-  private cabeceras:HttpHeaders = new HttpHeaders({'Content-Type':'application/json'});
-  constructor( private http:HttpClient ) { }
-
-  public listar():Observable<Alumno[]>{
-      
-  return  this.http.get<Alumno[]>(this.baseEndPoint);
-  }
-
-  public ver(id:number):Observable<Alumno>{
-    return this.http.get<Alumno>(`${this.baseEndPoint}/${id}`);
-  }
+export class AlumnoService extends CommonService<Alumno> {
+  protected baseEndPoint= BASE_ENDPOINT + '/alumnos';
   
-  public crear(alumno:Alumno):Observable<Alumno>{
-    return this.http.post<Alumno>(this.baseEndPoint,alumno,{headers:this.cabeceras});
+  constructor(http:HttpClient){
+  super(http);
   }
 
-  public editar(alumno:Alumno):Observable<Alumno>{
-    return this.http.put<Alumno>(`${this.baseEndPoint}/${alumno.id}`,alumno,{headers:this.cabeceras});
+  public crearConFoto(alumno:Alumno,archivo:File):Observable<Alumno>{
+    const formData= new FormData();
+    formData.append('archivo',archivo);
+    formData.append('nombre',alumno.nombre);
+    formData.append('apellido',alumno.apellido);
+    formData.append('email',alumno.email);
+    return this.http.post<Alumno>(this.baseEndPoint+'/crear-con-foto',
+    formData);
   }
 
-  public eliminar(id:number):Observable<void>{
-    return this.http.delete<void>(`${this.baseEndPoint}/${id}`);
+  public editarConFoto(alumno:Alumno,archivo:File):Observable<Alumno>{
+    const formData= new FormData();
+    formData.append('archivo',archivo);
+    formData.append('nombre',alumno.nombre);
+    formData.append('apellido',alumno.apellido);
+    formData.append('email',alumno.email);
+    return this.http.put<Alumno>(`${this.baseEndPoint}/editar-con-foto/${alumno.id}`,
+    formData);
   }
 
-  public listarPaginas(page:string,size:string):Observable<any>{
-    const params = new HttpParams()
-    .set('page',page)
-    .set('size',size);
-    return this.http.get<any>(`${this.baseEndPoint}/pagina`,{params:params});
-  }
 
 }

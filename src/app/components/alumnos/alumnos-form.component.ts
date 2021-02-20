@@ -3,65 +3,80 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Alumno } from 'src/app/models/alumno';
 import { AlumnoService } from '../../services/alumno.service';
 import Swal from 'sweetalert2'
+import { CommonFormComponent } from '../common-form.component';
 
 @Component({
   selector: 'app-alumnos-form',
   templateUrl: './alumnos-form.component.html',
   styleUrls: ['./alumnos-form.component.css']
 })
-export class AlumnosFormComponent implements OnInit {
-titulo='Crear Alumno';
+export class AlumnosFormComponent extends CommonFormComponent<Alumno,AlumnoService> implements OnInit {
 alumno:Alumno=new Alumno();
 error:any;
-  constructor(private alumnoServices:AlumnoService,private router:Router,private active:ActivatedRoute) { }
+private fotoSeleccionada:File;
 
-  ngOnInit(): void {
-   this.active.paramMap.subscribe(param=>{
-     const id:number= +param.get('id');
-     if(id){
-       this.alumnoServices.ver(id).subscribe(alumno=> this.alumno = alumno)
-     }
-   });
-  }
+  constructor( alumnoServices:AlumnoService, router:Router, active:ActivatedRoute) {
+    super(alumnoServices,router,active);
+    this.titulo='Crear Alumno';
+    this.model=new Alumno();
+    this.redirect='/alumnos';
+    this.nombreModel=Alumno.name;
+   }
 
-  crear():void{
-    
-    this.alumnoServices.crear(this.alumno).subscribe(alumno=>{
+   seleccionarfoto(event){
+     this.fotoSeleccionada=event.target.files[0];
+     
+     console.log(this.fotoSeleccionada);
+     console.log(this.fotoSeleccionada.type.indexOf('image'));
+      if(this.fotoSeleccionada.type.indexOf('image') < 0){
+        this.fotoSeleccionada=null;
+        Swal.fire('Error','El archivo debe ser tipo imagen','error')
+      }
+   }
+
+   crear():void{
+  if(!this.fotoSeleccionada){
+    super.crear();
+  } else{
+    this.alumnoServices.crearConFoto(this.model,this.fotoSeleccionada).subscribe(alumno=>{
       
       console.log(alumno);
       Swal.fire({
         position: 'top-end',
         icon: 'success',
-        title: `Alumno ${alumno.nombre} creado con exito`,
+        title: `${this.nombreModel} ${alumno.nombre} creado con exito`,
         showConfirmButton: false,
         timer: 3500
       })
-      this.router.navigate(['/alumnos']);
+      this.router.navigate([this.redirect]);
     },err=>{
       if(err.status===400){
         this.error=err.error;
       }
-    })
+    });
   }
+  }
+
 
   editar():void{
     
-    this.alumnoServices.editar(this.alumno).subscribe(alumno=>{
-      
-      console.log(alumno);
-      Swal.fire({
-        position: 'top-end',
-        icon: 'success',
-        title: `Alumno ${alumno.nombre} se ha actualizado con exito`,
-        showConfirmButton: false,
-        timer: 3500
-      })
-      this.router.navigate(['/alumnos']);
-    },err=>{
-      if(err.status===400){
-        this.error=err.error;
-      }
-    })
-  }
+      this.alumnoServices.editarConFoto(this.model,this.fotoSeleccionada).subscribe(alumno=>{
+        
+        console.log(alumno);
+        Swal.fire({
+          position: 'top-end',
+          icon: 'success',
+          title: `${this.nombreModel} ${alumno.nombre} actualizado con exito`,
+          showConfirmButton: false,
+          timer: 3500
+        })
+        this.router.navigate([this.redirect]);
+      },err=>{
+        if(err.status===400){
+          this.error=err.error;
+        }
+      });
+    }
+    
 
 }
