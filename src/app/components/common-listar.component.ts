@@ -37,6 +37,7 @@ this.totalPorPagina= event.pageSize;
 private calcularRangos(){
  
     this.service.listarPaginas(this.paginaActual.toString(),this.totalPorPagina.toString()).subscribe(content=>{
+      //console.log(content);
       this.lista=content.content as E[];
       this.totalRegistros=content.totalElements as number;
       this.paginator._intl.itemsPerPageLabel= 'Registros';

@@ -21,7 +21,10 @@ protected nombreModel:string;
    this.active.paramMap.subscribe(param=>{
      const id:number= +param.get('id');
      if(id){
-       this.alumnoServices.ver(id).subscribe(m=> this.model = m)
+       this.alumnoServices.ver(id).subscribe(m=> {
+         this.model = m;
+        this.titulo= 'Editar'+this.nombreModel;
+      })
      }
    });
   }
