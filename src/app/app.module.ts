@@ -28,6 +28,7 @@ import { ResponderExamenComponent } from './components/alumnos/responder-examen.
 import { ResponderExamenModalComponent } from './components/alumnos/responder-examen-modal.component';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatExpansionModule} from '@angular/material/expansion';
+import { VerExamenModalComponent } from './components/alumnos/ver-examen-modal.component';
 
 
  
@@ -45,7 +46,8 @@ import {MatExpansionModule} from '@angular/material/expansion';
     AsignarAlumnosComponent,
     AsignarExamenesComponent,
     ResponderExamenComponent,
-    ResponderExamenModalComponent
+    ResponderExamenModalComponent,
+    VerExamenModalComponent
     
   ],
   entryComponents:[ResponderExamenModalComponent],

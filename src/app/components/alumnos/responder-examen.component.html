@@ -30,7 +30,7 @@
 
             <ng-container matColumnDef="ver">
                 <th mat-header-cell *matHeaderCellDef> Ver </th>
-                <td mat-cell *matCellDef="let examen"><button mat-stroked-button color="warn" [disabled]="!examen.respondido">Ver</button></td>
+                <td mat-cell *matCellDef="let examen"><button mat-stroked-button (click)="verExamen(examen)" color="warn" [disabled]="!examen.respondido">Ver</button></td>
             </ng-container>
 
 
